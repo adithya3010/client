@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import StepRole1 from './stages/StepRole1';
 import StageRole2 from './stages/StageRole2';
 import StageRole3 from './stages/StageRole3';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +9,7 @@ const CreateAccount = () => {
     const navigate = useNavigate();
 
     const [step, setStep] = React.useState(1);
-    const [role, setRole] = React.useState("user");
+    const [role] = React.useState("user"); // fixed role as 'user'
     const [formData, setFormData] = React.useState({});
 
     const nextStep = () => setStep(step => step + 1);
@@ -22,6 +21,11 @@ const CreateAccount = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!formData.email || !formData.password) {
+            alert("Email and Password are required");
+            return;
+        }
 
         if (formData.password !== formData.confirmPassword) {
             alert("Passwords do not match");
@@ -45,6 +49,7 @@ const CreateAccount = () => {
                 alert("Account created successfully!");
                 setFormData({});
                 setStep(1);
+                navigate('/');
             } else {
                 alert(data.error || "Something went wrong");
             }
@@ -53,7 +58,6 @@ const CreateAccount = () => {
             alert("Error registering account");
         }
     };
-
 
     const variants = {
         initial: { opacity: 0, x: 50 },
@@ -66,7 +70,7 @@ const CreateAccount = () => {
             <div className="bg-white p-10 rounded-2xl shadow-xl w-[500px]">
 
                 <div className="flex justify-between mb-8">
-                    {["Role", "Details", "Password"].map((label, index) => (
+                    {["Details", "Password"].map((label, index) => (
                         <div key={index} className="flex-1 flex flex-col items-center">
                             <div className={`w-10 h-10 flex items-center justify-center rounded-full ${step >= index + 1 ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-700"}`}>
                                 {index + 1}
@@ -86,33 +90,19 @@ const CreateAccount = () => {
                             exit="exit"
                             transition={{ duration: 0.3 }}
                         >
-                            <StepRole1 role={role} setRole={setRole} nextStep={nextStep} />
+                            <StageRole2
+                                role={role}
+                                formData={formData}
+                                handleChange={handleChange}
+                                nextStep={nextStep}
+                                setFormData={setFormData}
+                            />
                         </motion.div>
                     )}
 
                     {step === 2 && (
                         <motion.div
                             key="step2"
-                            variants={variants}
-                            initial="initial"
-                            animate="animate"
-                            exit="exit"
-                            transition={{ duration: 0.3 }}
-                        >
-                            <StageRole2
-                                role={role}
-                                formData={formData}
-                                handleChange={handleChange}
-                                nextStep={nextStep}
-                                prevStep={prevStep}
-                                setFormData={setFormData}
-                            />
-                        </motion.div>
-                    )}
-
-                    {step === 3 && (
-                        <motion.div
-                            key="step3"
                             variants={variants}
                             initial="initial"
                             animate="animate"

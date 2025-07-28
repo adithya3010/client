@@ -4,13 +4,16 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
-    const { role, email, password } = req.body;
+    const { email, password } = req.body;
 
-    const validRoles = ["user", "admin", "hr", "doctor"];
-    if (!validRoles.includes(role)) return res.status(400).json({ error: "Invalid role" });
+    const role = "user";
 
-    const existingUser = await User.findOne({ email, role});
-    if(!existingUser) return res.status(400).json({ error: "User already exists with this email and role" });
+    if (!email || !password || !role) {
+      return res.status(400).json({ error: "Email, password, and role are required" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) return res.status(400).json({ error: "User already exists with this email" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
