@@ -1,85 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import StageRole2 from './stages/StageRole2';
 import StageRole3 from './stages/StageRole3';
 import { useNavigate } from 'react-router-dom';
 
+const variants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -50 },
+};
+
 const CreateAccount = () => {
-
     const navigate = useNavigate();
-
-    const [step, setStep] = React.useState(1);
-    const [role] = React.useState("user"); // fixed role as 'user'
-    const [formData, setFormData] = React.useState({});
-
-    const nextStep = () => setStep(step => step + 1);
-    const prevStep = () => setStep(step => step - 1);
+    const [step, setStep] = useState(1);
+    // Remove role selection for registration, always register as 'user'
+    const [formData, setFormData] = useState({});
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
+
+    const nextStep = () => setStep((prev) => prev + 1);
+    const prevStep = () => setStep((prev) => prev - 1);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!formData.email || !formData.password) {
-            alert("Email and Password are required");
-            return;
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match");
-            return;
-        }
-
         try {
-            const formDataToSend = new FormData();
-            formDataToSend.append("role", role);
-            Object.keys(formData).forEach(key => {
-                formDataToSend.append(key, formData[key]);
-            });
-
-            const res = await fetch("http://localhost:5000/api/auth/register", {
-                method: "POST",
-                body: formDataToSend,
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                alert("Account created successfully!");
-                setFormData({});
-                setStep(1);
-                navigate('/');
-            } else {
-                alert(data.error || "Something went wrong");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Error registering account");
+            // Always register as 'user'
+            const dataToSend = { ...formData, role: 'user' };
+            await axios.post('http://localhost:5000/api/auth/register', dataToSend);
+            alert('Account created successfully!');
+            navigate('/');
+        } catch (error) {
+            alert(error?.response?.data?.error || error?.response?.data?.message || 'Registration failed.');
         }
-    };
-
-    const variants = {
-        initial: { opacity: 0, x: 50 },
-        animate: { opacity: 1, x: 0 },
-        exit: { opacity: 0, x: -50 },
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800">
-            <div className="bg-white p-10 rounded-2xl shadow-xl w-[500px]">
-
-                <div className="flex justify-between mb-8">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-teal-200 via-white to-purple-200">
+            <div className="bg-white/80 p-10 sm:p-14 rounded-3xl shadow-2xl flex flex-col items-center w-full max-w-lg">
+                <h2 className="text-3xl font-bold mb-8">Create your Nirvaha account</h2>
+                <div className="flex justify-between mb-8 w-full max-w-xs mx-auto">
                     {["Details", "Password"].map((label, index) => (
                         <div key={index} className="flex-1 flex flex-col items-center">
-                            <div className={`w-10 h-10 flex items-center justify-center rounded-full ${step >= index + 1 ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-700"}`}>
+                            <div className={`w-10 h-10 flex items-center justify-center rounded-full ${step >= index + 1 ? "bg-gradient-to-r from-teal-500 to-purple-500 text-white shadow-lg" : "bg-gray-200 text-gray-700"}`}>
                                 {index + 1}
                             </div>
-                            <p className="text-sm mt-2">{label}</p>
+                            <p className="text-xs mt-2 text-gray-700">{label}</p>
                         </div>
                     ))}
                 </div>
-
                 <AnimatePresence mode="wait">
                     {step === 1 && (
                         <motion.div
@@ -91,7 +63,6 @@ const CreateAccount = () => {
                             transition={{ duration: 0.3 }}
                         >
                             <StageRole2
-                                role={role}
                                 formData={formData}
                                 handleChange={handleChange}
                                 nextStep={nextStep}
@@ -99,7 +70,6 @@ const CreateAccount = () => {
                             />
                         </motion.div>
                     )}
-
                     {step === 2 && (
                         <motion.div
                             key="step2"
@@ -120,7 +90,7 @@ const CreateAccount = () => {
                 </AnimatePresence>
                 <button
                     onClick={() => navigate('/')}
-                    className="mt-8 w-full py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition cursor-pointer"
+                    className="mt-8 w-full py-2 bg-gradient-to-r from-teal-500 to-purple-500 text-white font-semibold rounded-full transition cursor-pointer shadow hover:from-teal-600 hover:to-purple-600 text-lg"
                 >
                     Back to Login
                 </button>

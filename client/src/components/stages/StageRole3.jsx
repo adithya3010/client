@@ -2,7 +2,7 @@ import React from "react";
 
 const StageRole3 = ({ handleChange, prevStep, handleSubmit }) => {
     const inputClass =
-        "w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition mb-3";
+        "w-full rounded-full border-2 border-teal-200 p-4 bg-white/90 focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-gray-800 text-lg mb-3 placeholder-gray-400";
 
     return (
         <form onSubmit={handleSubmit}>
@@ -23,16 +23,18 @@ const StageRole3 = ({ handleChange, prevStep, handleSubmit }) => {
                 required
             />
 
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between mt-6 gap-3">
                 <button
                     onClick={prevStep}
                     type="button"
-                    className="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500 transition cursor-pointer">
+                    className="w-1/2 bg-gray-200 text-gray-800 rounded-full py-3 px-6 font-semibold hover:bg-gray-300 transition shadow"
+                >
                     Back
                 </button>
                 <button
                     type="submit"
-                    className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition cursor-pointer">
+                    className="w-1/2 bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-full py-3 px-6 font-semibold shadow hover:from-teal-600 hover:to-purple-600 transition text-lg"
+                >
                     Submit
                 </button>
             </div>

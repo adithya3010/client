@@ -2,7 +2,7 @@ import React from "react";
 
 const StageRole2 = ({ handleChange, nextStep }) => {
     const inputClass =
-        "w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition mb-3";
+        "w-full rounded-full border-2 border-teal-200 p-4 bg-white/90 focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-gray-800 text-lg mb-3 placeholder-gray-400";
 
     return (
         <div>
@@ -43,7 +43,7 @@ const StageRole2 = ({ handleChange, nextStep }) => {
                 <button 
                     onClick={nextStep} 
                     type="button" 
-                    className="bg-blue-500 w-full text-white px-5 py-2 rounded-lg hover:bg-blue-800 transition cursor-pointer">
+                    className="w-full bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-full py-4 px-8 font-semibold shadow hover:from-teal-600 hover:to-purple-600 transition text-xl">
                     Next
                 </button>
             </div>
