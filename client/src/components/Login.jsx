@@ -8,6 +8,7 @@ const Login = () => {
     const defaultValues = {
         email: "",
         password: "",
+        role: "",
     }
 
     const [visible, setVisible] = React.useState(false);
@@ -27,6 +28,7 @@ const Login = () => {
             });
 
             const data = await res.json();
+
             if (res.ok) {
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("role", data.role);
@@ -51,9 +53,22 @@ const Login = () => {
     return (
         <>
             <div className='bg-gray-900 h-screen flex items-center justify-center'>
-                <div className='bg-gray-200 p-10 rounded-2xl shadow-lg w-96 h-[60vh] flex flex-col items-center'>
+                <div className='bg-gray-200 p-10 rounded-2xl shadow-lg w-96 flex flex-col items-center'>
                     <h1 className='text-2xl tracking-wider font-semibold'>Login</h1>
-                    <div className='w-full mt-8 flex flex-col space-y-4'>
+
+                    <select 
+                        className='w-full p-2.5 mt-8 border-2 border-gray-800 rounded-lg outline-none focus:border-green-600 transition-all duration-300 ease-in-out cursor-pointer'
+                        onChange={(e) => setUserData({ ...userData, role: e.target.value })}
+                        value={userData.role}
+                        required
+                    >
+                        <option className='text-gray-700' value="user">User</option>
+                        <option className='text-gray-700' value="hr">HR</option>
+                        <option className='text-gray-700' value="doctor">Doctor</option>
+                        <option className='text-gray-700' value="admin">Admin</option>
+                    </select>
+
+                    <div className='w-full mt-4 flex flex-col space-y-4'>
                         <input
                             type='email'
                             placeholder='email'
@@ -71,7 +86,7 @@ const Login = () => {
                     </div>
                     <button
                         onClick={toggleVisibility}
-                        className='absolute right-[41%] pt-2 top-1/2 -translate-y-1/2 cursor-pointer'
+                        className='absolute right-[41.2%] pt-2 top-[53.8%] -translate-y-1/2 cursor-pointer'
                     >
                         <AnimatePresence mode="wait">
                             {visible ? (
