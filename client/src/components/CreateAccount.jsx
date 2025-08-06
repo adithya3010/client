@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import StageRole2 from './stages/StageRole2';
 import StageRole3 from './stages/StageRole3';
 import { useNavigate } from 'react-router-dom';
+const baseUrl = import.meta.env.VITE_API_URL;
 
 const variants = {
     initial: { opacity: 0, x: 50 },
@@ -30,7 +31,7 @@ const CreateAccount = () => {
         try {
             // Always register as 'user'
             const dataToSend = { ...formData, role: 'user' };
-            await axios.post('http://localhost:5000/api/auth/register', dataToSend);
+            await axios.post(`${baseUrl}/api/auth/register`, dataToSend);
             alert('Account created successfully!');
             navigate('/');
         } catch (error) {
